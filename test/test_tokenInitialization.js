@@ -1,9 +1,9 @@
-const { expect } = require("chai");
+const {expect} = require("chai");
 
 const AMOUNT = ethers.utils.parseEther('10');
 const ID = 99;
 
-describe("Token initialization", function() {
+describe("Token initialization", function () {
     it("ERC20 minting should work correctly", async () => {
         const signers = await ethers.getSigners();
         const receiver = signers[1];
