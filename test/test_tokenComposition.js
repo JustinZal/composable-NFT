@@ -57,5 +57,18 @@ describe("Token transfers", function () {
         expect(await erc20Token.balanceOf(receiver.address)).to.equal(transferAmount.toString());
         expect(await erc20Token.balanceOf(erc721Token.address)).to.equal(expectedBalance.toString());
         expect(await erc721Token.balanceOfERC20(TOKEN_ID, erc20Token.address)).to.equal(expectedBalance.toString());
+    });
+
+    it("Transfer tokens via tokenFallback", async () => {
+        const MockedERC223 = await ethers.getContractFactory("MockedERC223");
+        const mockedERC223 = await MockedERC223.deploy();
+        await mockedERC223.deployed();
+
+        const [sender] = await ethers.getSigners();
+        const value = ethers.utils.parseEther('1');
+        const tokenId = ethers.utils.hexValue(Number(TOKEN_ID));
+
+        await mockedERC223.transfer(sender.address, value, tokenId, erc721Token.address);
+        expect(await erc721Token.balanceOfERC20(TOKEN_ID, mockedERC223.address)).to.equal(value.toString());
     })
 });
