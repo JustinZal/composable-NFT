@@ -30,12 +30,12 @@ Tests can be executed with the following command
 ### Smart contracts
 The main smart contract is located in the file `contracts/MyComposableNFT.sol` and contains the following important functions:
 
-* balanceOfERC20(uint256 _tokenId, address _erc20Contract) - fetches token balance owned by NFT 
-* getERC20(address _from, uint256 _tokenId, address _erc20Contract, uint256 _value) - Deposits ERC20 token via approve method
-* transferERC20(uint256 _tokenId, address _to, address _erc20Contract, uint256 _value) - Transfers ERC20 token outside the NFT
-* transferERC223(uint256 _tokenId, address _to, address _erc223Contract, uint256 _value, bytes memory _data) - Transfers ERC20 outside the NFT and complies the ERC223 standard
-* tokenFallback(address _from, uint256 _value, bytes calldata _data) - A function that notifies the contract about incomming tokens
-* _bytesToTokenId(bytes calldata _data) - Utility function to convert bytes to uint256 tokenId
+* `balanceOfERC20(uint256 _tokenId, address _erc20Contract)` - fetches token balance owned by NFT 
+* `getERC20(address _from, uint256 _tokenId, address _erc20Contract, uint256 _value)` - Deposits ERC20 token via approve method
+* `transferERC20(uint256 _tokenId, address _to, address _erc20Contract, uint256 _value)` - Transfers ERC20 token outside the NFT
+* `transferERC223(uint256 _tokenId, address _to, address _erc223Contract, uint256 _value, bytes memory _data)` - Transfers ERC20 outside the NFT and complies the ERC223 standard
+* `tokenFallback(address _from, uint256 _value, bytes calldata _data)` - A function that notifies the contract about incomming tokens
+* `_bytesToTokenId(bytes calldata _data)` - Utility function to convert bytes to uint256 tokenId
 
 ### Tests
 
