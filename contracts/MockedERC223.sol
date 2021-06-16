@@ -2,6 +2,10 @@ pragma solidity 0.7.6;
 
 // SPDX-License-Identifier: MIT
 
+/*
+   A simple Mock of ERC223 token in order to perform tests
+*/
+
 import "./MyComposableNFT.sol";
 
 contract MockedERC223 {

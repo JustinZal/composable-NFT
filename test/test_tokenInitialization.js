@@ -1,5 +1,9 @@
 const {expect} = require("chai");
 
+/**
+ * Test meant to check basic token functionality: deployment and minting.
+ */
+
 const AMOUNT = ethers.utils.parseEther('10');
 const ID = 99;
 
