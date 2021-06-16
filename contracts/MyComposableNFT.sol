@@ -59,7 +59,7 @@ contract MyComposableNFT is ERC721("MyComposable", "MYC") {
         emit TransferERC20(_tokenId, _to, _erc20Contract, _value);
     }
 
-    function transferERC223(uint256 _tokenId, address _to, address _erc223Contract, uint256 _value, bytes calldata _data) external {
+    function transferERC223(uint256 _tokenId, address _to, address _erc223Contract, uint256 _value, bytes memory _data) external {
         require(ownerOf(_tokenId) == msg.sender, 'Unauthorized transfer!');
         require(tokenBalances[_tokenId][_erc223Contract] >= _value, 'Insufficient balance!');
 

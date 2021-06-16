@@ -1,5 +1,4 @@
 const {expect} = require("chai");
-const {random} = require("lodash");
 
 const initializeERC20 = async (amount, receiverAddress) => {
     const MyERC20 = await ethers.getContractFactory("MyERC20");
@@ -23,6 +22,14 @@ const depositToken = async (to, erc20, erc721, amount, tokenId) => {
     await erc20.connect(to).approve(erc721.address, amount);
     await erc721.connect(to).getERC20(to.address, tokenId, erc20.address, amount);
 };
+
+const getMockedERC223 = async addressNFT => {
+    const MockedERC223 = await ethers.getContractFactory("MockedERC223");
+    const mockedERC223 = await MockedERC223.deploy(addressNFT);
+    await mockedERC223.deployed();
+
+    return mockedERC223;
+}
 
 const TOKEN_ID = '42';
 let erc20Token, erc721Token;
@@ -59,16 +66,21 @@ describe("Token transfers", function () {
         expect(await erc721Token.balanceOfERC20(TOKEN_ID, erc20Token.address)).to.equal(expectedBalance.toString());
     });
 
-    it("Transfer tokens via tokenFallback", async () => {
-        const MockedERC223 = await ethers.getContractFactory("MockedERC223");
-        const mockedERC223 = await MockedERC223.deploy();
-        await mockedERC223.deployed();
+    it("Transfer tokens via ERC223 should work correctly", async () => {
+        const mockedERC223 = await getMockedERC223(erc721Token.address);
 
         const [sender] = await ethers.getSigners();
-        const value = ethers.utils.parseEther('1');
+        const value = ethers.utils.parseEther('10');
         const tokenId = ethers.utils.hexValue(Number(TOKEN_ID));
 
-        await mockedERC223.transfer(sender.address, value, tokenId, erc721Token.address);
+        expect(await erc721Token.balanceOfERC20(TOKEN_ID, mockedERC223.address)).to.equal('0');
+        await mockedERC223.notifyTransfer(sender.address, value, tokenId);
         expect(await erc721Token.balanceOfERC20(TOKEN_ID, mockedERC223.address)).to.equal(value.toString());
-    })
+
+        const data = ethers.utils.hexValue(100);
+        const [to, from] = await ethers.getSigners();
+        await erc721Token.connect(from).transferERC223(TOKEN_ID, to.address, mockedERC223.address, value, data);
+
+        expect(await erc721Token.balanceOfERC20(TOKEN_ID, mockedERC223.address)).to.equal('0');
+    });
 });
