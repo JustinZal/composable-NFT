@@ -51,9 +51,10 @@ contract MyComposableNFT is ERC721("MyComposable", "MYC") {
 
         //Allowance and transfer error checks
         require(allowance >= _value, 'Token allowance not sufficient!');
-        require(token.transferFrom(_from, address(this), _value), 'Transfer from failed!');
-
+        
         tokenBalances[_tokenId][_erc20Contract] += _value;
+        token.transferFrom(_from, address(this), _value);
+
         emit ReceivedERC20(_from, _tokenId, _erc20Contract, _value);
     }
 
@@ -62,9 +63,8 @@ contract MyComposableNFT is ERC721("MyComposable", "MYC") {
         require(ownerOf(_tokenId) == msg.sender, 'Unauthorized transfer!');
         require(tokenBalances[_tokenId][_erc20Contract] >= _value, 'Insufficient balance!');
 
-        require(IERC20(_erc20Contract).transfer(_to, _value), 'ERC20 transaction failed');
-
         tokenBalances[_tokenId][_erc20Contract] -= _value;
+        IERC20(_erc20Contract).transfer(_to, _value);
         emit TransferERC20(_tokenId, _to, _erc20Contract, _value);
     }
 
@@ -73,8 +73,8 @@ contract MyComposableNFT is ERC721("MyComposable", "MYC") {
         require(ownerOf(_tokenId) == msg.sender, 'Unauthorized transfer!');
         require(tokenBalances[_tokenId][_erc223Contract] >= _value, 'Insufficient balance!');
 
-        require(IERC223(_erc223Contract).transfer(_to, _value, _data), 'ERC223 transaction failed');
         tokenBalances[_tokenId][_erc223Contract] -= _value;
+        IERC223(_erc223Contract).transfer(_to, _value, _data);
         emit TransferERC20(_tokenId, _to, _erc223Contract, _value);
     }
 
